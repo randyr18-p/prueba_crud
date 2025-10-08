@@ -20,8 +20,6 @@ return new class extends Migration
             $table->enum('estado',['activo', 'inactivo',])->default('activo');
             $table->timestamp('fecha_registro')->useCurrent();
             $table->timestamp('fecha_ultima_modificacion')->useCurrent()->useCurrentOnUpdate();
-            $table->timestamps();
-
 
             $table->index('email');
             $table->index('estado');

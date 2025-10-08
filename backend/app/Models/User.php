@@ -5,12 +5,12 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -25,26 +25,23 @@ class User extends Authenticatable
         'estado'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
+   
+      protected $casts = [
+        'fecha_registro' => 'datetime',
+        'fecha_ultima_modificacion' => 'datetime',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    // Scope para usuarios activos
+    public function scopeActivos($query)
     {
-        return [
-            'fecha_registro' => 'datetime',
-            'fecha_ultima_modificacion' => 'datatime',
-        ];
+        return $query->where('estado', 'activo');
     }
+    // Accessor para nombre completo
+    public function getNombreCompletoAttribute()
+    {
+        return "{$this->nombres} {$this->apellidos}";
+    }
+
+   
+    
 }
