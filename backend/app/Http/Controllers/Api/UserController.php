@@ -41,9 +41,42 @@ class UserController extends Controller
     /**
      * Crear un nuevo usuario.
      */
-    public function store(StoreUserRequest $request): JsonResponse
+     public function store(StoreUserRequest $request): JsonResponse
     {
         try {
+            // Verificar si ya existe un usuario con el mismo correo
+            $existingUser = User::where('email', $request->email)->first();
+
+            // Caso 1: ya existe pero está inactivo → reactivar
+            if ($existingUser && $existingUser->estado === 'inactivo') {
+                $existingUser->update([
+                    'nombres' => $request->nombres,
+                    'apellidos' => $request->apellidos,
+                    'telefono' => $request->telefono,
+                    'estado' => 'activo',
+                    'fecha_ultima_modificacion' => now(),
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'data' => new UserResource($existingUser),
+                    'message' => 'Usuario reactivado exitosamente.',
+                ], Response::HTTP_OK);
+            }
+
+            // Caso 2: existe y está activo → error de validación
+            if ($existingUser && $existingUser->estado === 'activo') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Se encontraron errores en el formulario. Por favor corríjalos antes de continuar.',
+                    'errors' => [
+                        'email' => 'Este correo electrónico ya está registrado.',
+                    ],
+                    'help' => 'Revise los campos indicados y verifique que los datos cumplen con los requisitos.',
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+
+            // Caso 3: no existe → crear nuevo
             $user = User::create($request->validated());
 
             return response()->json([
@@ -51,6 +84,7 @@ class UserController extends Controller
                 'data' => new UserResource($user),
                 'message' => 'Usuario creado exitosamente.',
             ], Response::HTTP_CREATED);
+
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
@@ -59,7 +93,6 @@ class UserController extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
     /**
      * Mostrar un usuario específico.
      */

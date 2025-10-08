@@ -45,7 +45,9 @@ class UpdateUserRequest extends FormRequest
                 'required',
                 'email:rfc',
                 'max:150',
-                Rule::unique('users', 'email')->ignore($userId),
+                 Rule::unique('users', 'email')
+                    ->where(fn($q) => $q->where('estado', 'activo'))
+                    ->ignore($userId),
             ],
             'telefono' => [
                 'sometimes',

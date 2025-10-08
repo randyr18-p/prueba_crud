@@ -125,7 +125,7 @@ export default {
         fecha_registro: null
       },
       errors: {},
-      isSubmitting: false // 🔒 evita envíos dobles
+      isSubmitting: false // evita envíos dobles
     };
   },
   computed: {

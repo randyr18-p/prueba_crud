@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule; 
 
 class StoreUserRequest extends FormRequest
 {
@@ -40,7 +41,7 @@ class StoreUserRequest extends FormRequest
                 'required',
                 'email:rfc',
                 'max:150',
-                'unique:users,email',
+                Rule::unique('users', 'email')->where(fn($q) => $q->where('estado', 'activo')),
             ],
             'telefono' => [
                 'required',
