@@ -38,7 +38,7 @@ class StoreUserRequest extends FormRequest
             ],
             'email' => [
                 'required',
-                'email:rfc,dns',
+                'email:rfc',
                 'max:150',
                 'unique:users,email',
             ],

@@ -12,6 +12,10 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
 
+    public const CREATED_AT = 'fecha_registro';
+    public const UPDATED_AT = 'fecha_ultima_modificacion';
+
+
     /**
      * The attributes that are mass assignable.
      *

@@ -19,14 +19,14 @@ class UserController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $usuarios = User::where('estado', 'activo')
+            $users = User::where('estado', 'activo')
                 ->orderBy('nombres')
                 ->orderBy('apellidos')
                 ->get();
 
             return response()->json([
                 'success' => true,
-                'data' => UserResource::collection($usuarios),
+                'data' => UserResource::collection($users),
                 'message' => 'Usuarios obtenidos correctamente.',
             ], Response::HTTP_OK);
         } catch (Exception $e) {
@@ -44,11 +44,11 @@ class UserController extends Controller
     public function store(StoreUserRequest $request): JsonResponse
     {
         try {
-            $usuario = User::create($request->validated());
+            $user = User::create($request->validated());
 
             return response()->json([
                 'success' => true,
-                'data' => new UserResource($usuario),
+                'data' => new UserResource($user),
                 'message' => 'Usuario creado exitosamente.',
             ], Response::HTTP_CREATED);
         } catch (Exception $e) {
@@ -66,11 +66,11 @@ class UserController extends Controller
     public function show(string $id): JsonResponse
     {
         try {
-            $usuario = User::findOrFail($id);
+            $user = User::findOrFail($id);
 
             return response()->json([
                 'success' => true,
-                'data' => new UserResource($usuario),
+                'data' => new UserResource($user),
                 'message' => 'Usuario obtenido correctamente.',
             ], Response::HTTP_OK);
         } catch (Exception $e) {
@@ -88,12 +88,12 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, string $id): JsonResponse
     {
         try {
-            $usuario = User::findOrFail($id);
-            $usuario->update($request->validated());
+            $user = User::findOrFail($id);
+            $user->update($request->validated());
 
             return response()->json([
                 'success' => true,
-                'data' => new UserResource($usuario),
+                'data' => new UserResource($user),
                 'message' => 'Usuario actualizado exitosamente.',
             ], Response::HTTP_OK);
         } catch (Exception $e) {
@@ -111,8 +111,8 @@ class UserController extends Controller
     public function destroy(string $id): JsonResponse
     {
         try {
-            $usuario = User::findOrFail($id);
-            $usuario->update(['estado' => 'inactivo']);
+            $user = User::findOrFail($id);
+            $user->update(['estado' => 'inactivo']);
 
             return response()->json([
                 'success' => true,
